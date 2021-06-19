@@ -14,17 +14,20 @@ class TestView(View):
         screen.set_background_color((255, 255, 255))
 
         # Objects
-        self.my_object = MyObject(Fr(200), Fr(200))
-        self.my2nd_object = MyObject(Fr(200), Fr(200))
-        self.nodes = [Node(Fr(x * 100), Fr(500)) for x in range(1, 8)]
+        my_object_pos = (Fr(100), Fr(200))
+        my_object_scale = (Fr(100), Fr(150))
+
+        self.my_object = MyObject(my_object_pos[0], my_object_pos[1], my_object_scale[0], my_object_scale[1])
+        self.my2nd_object = MyObject(my_object_pos[0], my_object_pos[1], my_object_scale[0], my_object_scale[1])
+        self.nodes = [Node(Fr(x * 100), Fr(500), Fr(100), Fr(100)) for x in range(1, 8)]
+
+        # Layers
+        main_layer = screen.get_main_layer()
+        bottom_layer = main_layer.create_bottom_layer(Fr(500), Fr(200), Fr(400), Fr(200))
 
         # Insert
-        main_layer = screen.get_main_layer()
-        bottom_layer = main_layer.create_bottom_layer(Fr(200), Fr(200), Fr(200), Fr(200))
-
-        scale = (Fr(100), Fr(100))
-        main_layer.add_drawable_object_to_front(self.my_object, scale)
-        bottom_layer.add_drawable_object_to_front(self.my2nd_object, scale)
+        main_layer.add_drawable_object_to_front(self.my_object)
+        bottom_layer.add_drawable_object_to_front(self.my2nd_object)
 
         for node in self.nodes:
             bottom_layer.add_drawable_object_to_bottom(node)

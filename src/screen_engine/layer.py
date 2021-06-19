@@ -31,36 +31,49 @@ class Layer:
         for layer in self.layers:
             layer.draw_layer(pygame_screen)
 
-    def draw_object(self, drawable_object, pygame_screen):
-        img = drawable_object.get_img()
+    def draw_object(self, drawable_object: Drawable, pygame_screen):
         x, y = self.calculate_object_absolute_position(drawable_object)
-        pygame_screen.blit(img, (x, y))
+        self.check_position()
 
-    def calculate_object_absolute_position(self, drawable_object: Drawable):
-        absolute_x = self.get_x() + (drawable_object.get_x_fraction() * self.width)
-        absolute_y = self.get_y() + (drawable_object.get_y_fraction() * self.height)
-        return absolute_x, absolute_y
+        width, height = self.calculate_object_absolute_size(drawable_object)
+        scaled_img = drawable_object.scale(width, height)
+
+        pygame_screen.blit(scaled_img, (x, y))
+
+    def check_position(self):
+        pass  # TODO Return position error when object point is outside the layer
 
     ##################
     # Finding object #
     ##################
     def find_object_on_layer(self, position):
-        pass
+        for layer in self.get_layers():
+            layer.find_object_on_layer(position)
+
+        for drawable_object in self.get_drawable_objects():
+            pass
+
+    #####################
+    # Object parameters #
+    #####################
+    def calculate_object_absolute_position(self, drawable_object: Drawable):
+        absolute_x = self.get_x() + (drawable_object.get_x_fraction() * self.width)
+        absolute_y = self.get_y() + (drawable_object.get_y_fraction() * self.height)
+        return absolute_x, absolute_y
+
+    def calculate_object_absolute_size(self, drawable_object: Drawable):
+        absolute_width = drawable_object.get_width_fraction() * self.width
+        absolute_height = drawable_object.get_height_fraction() * self.height
+        return int(absolute_width), int(absolute_height)
 
     #######################
     # Add object to layer #
     #######################
-    def add_drawable_object_to_front(self, drawable_object: Drawable, scale=None):
-        if scale is not None and isinstance(scale, tuple):
-            drawable_object.scale(scale[0], scale[1], self)
-        self.check_position()
+    def add_drawable_object_to_front(self, drawable_object: Drawable):
         self.drawable_objects.append(drawable_object)
 
     def add_drawable_object_to_bottom(self, drawable_object: Drawable):
         self.drawable_objects.insert(0, drawable_object)
-
-    def check_position(self):
-        pass  # TODO Return position error when object point is outside the layer
 
     #############
     # Add layer #
@@ -89,3 +102,9 @@ class Layer:
 
     def get_height(self):
         return self.height
+
+    def get_layers(self):
+        return self.layers
+
+    def get_drawable_objects(self):
+        return self.drawable_objects

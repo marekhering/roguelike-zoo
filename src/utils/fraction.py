@@ -1,16 +1,27 @@
+from src.setup import FRACTION_DIVIDER
+
 
 class Fraction:
-    DIVIDER = 1000
+    DIVIDER = FRACTION_DIVIDER
 
     def __init__(self, value):
         self.value = value
         self.fraction = self.calculate_fraction()
         self._check_fraction()
 
+    def calculate_fraction(self):
+        return self.value / Fraction.DIVIDER
+
     def add(self, value):
         self.value += value
         self.fraction = self.calculate_fraction()
         self._check_fraction(set_values=True)
+
+    def __mul__(self, other):
+        return self.fraction * other
+
+    def __rmul__(self, other):
+        return self.fraction * other
 
     def _check_fraction(self, set_values=False):
         if set_values:
@@ -24,11 +35,11 @@ class Fraction:
             if self.fraction < 0 or self.fraction > 1:
                 raise ValueError
 
-    def calculate_fraction(self):
-        return self.value / Fraction.DIVIDER
+    def copy(self):
+        return Fraction(self.get_value())
 
-    def __mul__(self, other):
-        return self.fraction * other
+    def get_value(self):
+        return self.value
 
-    def __rmul__(self, other):
-        return self.fraction * other
+    def get_fraction(self):
+        return self.fraction
