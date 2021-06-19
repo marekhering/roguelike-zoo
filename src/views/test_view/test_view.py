@@ -19,14 +19,16 @@ class TestView(View):
 
         self.my_object = MyObject(my_object_pos[0], my_object_pos[1], my_object_scale[0], my_object_scale[1])
         self.my2nd_object = MyObject(my_object_pos[0], my_object_pos[1], my_object_scale[0], my_object_scale[1])
+
         self.nodes = [Node(Fr(x * 100), Fr(500), Fr(100), Fr(100)) for x in range(1, 8)]
 
         # Layers
         main_layer = screen.get_main_layer()
         bottom_layer = main_layer.create_bottom_layer(Fr(500), Fr(200), Fr(400), Fr(200))
+        snd_bottom = bottom_layer.create_bottom_layer(Fr(0), Fr(0), Fr(500), Fr(1000))
 
         # Insert
-        main_layer.add_drawable_object_to_front(self.my_object)
+        snd_bottom.add_drawable_object_to_front(self.my_object)
         bottom_layer.add_drawable_object_to_front(self.my2nd_object)
 
         for node in self.nodes:
@@ -53,5 +55,8 @@ class TestView(View):
 
         if mouse.get_left_button_up():
             clicked_object = self.screen.find_object(mouse.get_position())
-
+            if clicked_object:
+                clicked_object.on_click()
+            else:
+                print("Nothing here")
 

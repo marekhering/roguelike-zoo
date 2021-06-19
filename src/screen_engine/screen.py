@@ -24,7 +24,9 @@ class Screen:
         self.layer.draw_layer(self.pygame_screen)
 
     def find_object(self, position):
-        return self.layer.find_object_on_layer(position)
+        signal, found_object = self.layer.find_object_on_layer(position)
+        if signal == 1:
+            return found_object
 
     def get_main_layer(self):
         return self.layer

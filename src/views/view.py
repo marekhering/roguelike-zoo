@@ -7,4 +7,4 @@ class View:
         self.screen = screen
 
     def key_handler(self, keys, mouse: Mouse):
-        return NotImplementedError
+        raise NotImplementedError

@@ -4,16 +4,17 @@ from src.utils.fraction import Fraction as Fr
 
 
 class Drawable:
-    def __init__(self, x_fraction: Fr, y_fraction: Fr, width_fraction: Fr, height_fraction: Fr, img_path):
+    def __init__(self, x_fr: Fr, y_fr: Fr, width_fr: Fr, height_fr: Fr, img_path, click_block=True):
         """
         :param x_fraction: per mille of the width of the layer on which the object will be located (0, 1000)
         :param y_fraction: per mille of the width of the layer on which the object will be located (0, 1000)
         :param img_path: path to image file
         """
-        self.x_fraction = x_fraction.copy()
-        self.y_fraction = y_fraction.copy()
-        self.width_fraction = width_fraction.copy()
-        self.height_fraction = height_fraction.copy()
+        self.x_fraction = x_fr.copy()
+        self.y_fraction = y_fr.copy()
+        self.width_fraction = width_fr.copy()
+        self.height_fraction = height_fr.copy()
+        self.click_block = click_block
 
         self.img_path = img_path
         self.img = pygame.image.load(img_path)
@@ -40,3 +41,6 @@ class Drawable:
 
     def get_height_fraction(self):
         return self.height_fraction
+
+    def if_blocking(self):
+        return self.click_block

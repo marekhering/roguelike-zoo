@@ -1,8 +1,8 @@
-from src.screen_engine import Drawable
+from src.screen_engine import Interactive
 from src.utils.fraction import Fraction as Fr
 
 
-class MyObject(Drawable):
+class MyObject(Interactive):
     IMG_PATH = 'res/sprites/characters/snake.png'
 
     def __init__(self, x_fraction: Fr, y_fraction: Fr, width_fraction: Fr, height_fraction: Fr):
@@ -19,3 +19,6 @@ class MyObject(Drawable):
 
     def move_right(self):
         self.x_fraction.add(5)
+
+    def on_click(self):
+        print("Psss")
