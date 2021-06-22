@@ -1,27 +1,28 @@
 from __future__ import annotations  # For typing the enclosing class
 
-from .drawable import Drawable
-from .interactive import Interactive
-from src.utils.fraction import Fraction as Fr
+from src.screen_engine.interfaces import Drawable, Interactive
+from .frame import Frame
+from src.utils import Point, Fraction as Fr
 
 from typing import Tuple, List, Union
 
 
-class Layer:
-    def __init__(self, x_fraction: Fr, y_fraction: Fr, width_fraction: Fr, height_fraction: Fr, parent):
+class Layer(Frame):
+    def __init__(self, x_fraction: Fr, y_fraction: Fr, width_fraction: Fr, height_fraction: Fr, parent: Frame):
 
         # TODO Delete saving fractions as attributes if not in used
         self.x_fraction = x_fraction
         self.y_fraction = y_fraction
         self.width_fraction = width_fraction
         self.height_fraction = height_fraction
-        self.parent = parent  # TODO Create frame class which have x, y, height, width attributes
+        self.parent = parent
 
         # Absolute parameters
-        self.x = int(parent.get_x() + parent.get_width() * x_fraction)
-        self.y = int(parent.get_y() + parent.get_height() * y_fraction)
-        self.width = int(parent.get_width() * width_fraction)
-        self.height = int(parent.get_height() * height_fraction)
+        x = int(parent.get_x() + parent.get_width() * x_fraction)
+        y = int(parent.get_y() + parent.get_height() * y_fraction)
+        width = int(parent.get_width() * width_fraction)
+        height = int(parent.get_height() * height_fraction)
+        super(Layer, self).__init__(Point(x, y), width, height)
 
         self.layers = []
         self.drawable_objects = []
@@ -66,7 +67,6 @@ class Layer:
                 return signal, found_object
 
         for drawable in reversed(self.get_drawable_objects()):
-            # TODO Create generic function for check if point is inside the square
             is_inside = self._if_point_is_inside_object(position, drawable)
             if is_inside:
                 if isinstance(drawable, Interactive):
@@ -125,18 +125,6 @@ class Layer:
     ###########
     # Getters #
     ###########
-    def get_x(self) -> int:
-        return self.x
-
-    def get_y(self) -> int:
-        return self.y
-
-    def get_width(self) -> int:
-        return self.width
-
-    def get_height(self) -> int:
-        return self.height
-
     def get_layers(self) -> List[Layer]:
         return self.layers
 

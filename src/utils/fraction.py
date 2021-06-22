@@ -43,3 +43,7 @@ class Fraction:
 
     def get_fraction(self):
         return self.fraction
+
+    @staticmethod
+    def max():
+        return Fraction(Fraction.DIVIDER)

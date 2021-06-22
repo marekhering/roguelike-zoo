@@ -1,5 +1,5 @@
 from .drawable import Drawable
-from ..utils import Fraction as Fr
+from src.utils import Fraction as Fr
 
 
 class Interactive(Drawable):

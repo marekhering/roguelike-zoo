@@ -1,6 +1,6 @@
 from src.setup import *
 from src.views import TestView
-from src.screen_engine.screen import Screen
+from src.screen_engine.screen.screen import Screen
 from src.views.view import View
 from .mouse import Mouse
 

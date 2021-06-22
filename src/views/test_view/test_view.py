@@ -2,7 +2,7 @@ from src.views.view import View
 from src.screen_engine import Screen, Layer
 from src.utils.fraction import Fraction as Fr
 from .my_object import MyObject
-from .node import Node
+from .node import MyNode
 from src import Mouse
 
 import pygame
@@ -20,11 +20,11 @@ class TestView(View):
         self.my_object = MyObject(my_object_pos[0], my_object_pos[1], my_object_scale[0], my_object_scale[1])
         self.my2nd_object = MyObject(my_object_pos[0], my_object_pos[1], my_object_scale[0], my_object_scale[1])
 
-        self.nodes = [Node(Fr(x * 100), Fr(500), Fr(100), Fr(100)) for x in range(1, 8)]
+        self.nodes = [MyNode(Fr(x * 100), Fr(500), Fr(100), Fr(100)) for x in range(1, 8)]
 
         # Layers
-        main_layer = screen.get_main_layer()
-        bottom_layer = main_layer.create_bottom_layer(Fr(500), Fr(200), Fr(400), Fr(200))
+        base_layer = screen.get_base_layer()
+        bottom_layer = base_layer.create_bottom_layer(Fr(500), Fr(200), Fr(400), Fr(200))
         snd_bottom = bottom_layer.create_bottom_layer(Fr(0), Fr(0), Fr(500), Fr(1000))
 
         # Insert
