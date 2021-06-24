@@ -1,14 +1,21 @@
 from __future__ import annotations  # For typing the enclosing class
 
+import pygame
+
 from src.screen_engine.interfaces import Drawable, Interactive
 from .frame import Frame
 from src.utils import Point, Fraction as Fr
+from src.setup import DEBUG_LAYER
 
 from typing import Tuple, List, Union
 
 
 class Layer(Frame):
-    def __init__(self, x_fraction: Fr, y_fraction: Fr, width_fraction: Fr, height_fraction: Fr, parent: Frame):
+    def __init__(self, x_fraction: Fr, y_fraction: Fr, width_fraction: Union[Fr, None],
+                 height_fraction: Union[Fr, None], parent: Frame):
+
+        if width_fraction is None and height_fraction is None:
+            raise ValueError
 
         # TODO Delete saving fractions as attributes if not in used
         self.x_fraction = x_fraction
@@ -20,8 +27,12 @@ class Layer(Frame):
         # Absolute parameters
         x = int(parent.get_x() + parent.get_width() * x_fraction)
         y = int(parent.get_y() + parent.get_height() * y_fraction)
-        width = int(parent.get_width() * width_fraction)
-        height = int(parent.get_height() * height_fraction)
+
+        width = int(parent.get_width() * width_fraction) if width_fraction is not None else 0
+        height = int(parent.get_height() * height_fraction) if height_fraction is not None else width
+        if width_fraction is None:
+            width = height
+
         super(Layer, self).__init__(Point(x, y), width, height)
 
         self.layers = []
@@ -31,6 +42,10 @@ class Layer(Frame):
     # Drawing functions #
     #####################
     def draw_layer(self, pygame_screen):
+        if DEBUG_LAYER:
+            frame = pygame.Rect(self.get_x(), self.get_y(), self.width, self.height)
+            pygame.draw.rect(pygame_screen, (255, 0, 0), frame, 3)
+
         for drawable_object in self.drawable_objects:
             self.draw_object(drawable_object, pygame_screen)
 
@@ -112,12 +127,15 @@ class Layer(Frame):
     #############
     # Add layer #
     #############
-    def create_bottom_layer(self, x_fraction: Fr, y_fraction: Fr, width_fraction: Fr, height_fraction: Fr) -> Layer:
+    def create_bottom_layer(self, x_fraction: Fr, y_fraction: Fr, width_fraction: Union[Fr, None],
+                            height_fraction: Union[Fr, None]) -> Layer:
+
         new_layer = Layer(x_fraction, y_fraction, width_fraction, height_fraction, self)
         self.layers.insert(0, new_layer)
         return new_layer
 
-    def create_top_layer(self, x_fraction: Fr, y_fraction: Fr, width_fraction: Fr, height_fraction: Fr) -> Layer:
+    def create_top_layer(self, x_fraction: Fr, y_fraction: Fr, width_fraction: Union[Fr, None],
+                         height_fraction: Union[Fr, None]) -> Layer:
         new_layer = Layer(x_fraction, y_fraction, width_fraction, height_fraction, self)
         self.layers.append(new_layer)
         return new_layer

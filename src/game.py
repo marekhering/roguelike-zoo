@@ -1,7 +1,7 @@
 from src.setup import *
-from src.views import TestView
+from src.views import View, RunView
 from src.screen_engine.screen.screen import Screen
-from src.views.view import View
+from src.characters import Snake
 from .mouse import Mouse
 
 import pygame
@@ -14,6 +14,9 @@ class Game:
         self.clock = None
         self.running = None
 
+        # For tests
+        self.character = None
+
     def run(self):
         pygame.init()
         pygame.display.set_caption(GAME_NAME)
@@ -21,7 +24,10 @@ class Game:
 
         self.clock = pygame.time.Clock()
         self.screen = Screen(GAME_WIDTH, GAME_HEIGHT)
-        self.set_current_view(TestView(self.screen))
+
+        # For tests
+        self.character = Snake()
+        self.set_current_view(RunView(self.screen, self.character))
 
         self.running = True
         self.mainloop()
@@ -39,7 +45,7 @@ class Game:
         mouse_up = False
 
         keys = pygame.key.get_pressed()
-        mouse_position = pygame.mouse.get_pos()
+        mouse_position = pygame.mouse.get_pos()  # TODO make it point not Tuple
         mouse_buttons = pygame.mouse.get_pressed(3)
 
         for event in pygame.event.get():

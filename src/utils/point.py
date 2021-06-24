@@ -6,7 +6,7 @@ from .fraction import Fraction as Fr
 class Point(list):
     def __init__(self, x: Union[Fr, int], y: Union[Fr, int]):
         if type(x) != type(y):
-            raise ValueError
+            raise TypeError
         super().__init__([x, y])
         self.x = x
         self.y = y
